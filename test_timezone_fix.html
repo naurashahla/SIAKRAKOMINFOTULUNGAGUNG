@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test Timezone Fix</title>
+    </head>
+    <body>
+        <h2>Test Timezone Date Formatting</h2>
+        <div id="results"></div>
+
+        <script>
+            function testDateFormatting() {
+                const results = document.getElementById("results");
+
+                // Create test dates
+                const testDates = [
+                    new Date(2025, 0, 1), // January 1, 2025
+                    new Date(2025, 0, 2), // January 2, 2025
+                    new Date(2025, 0, 15), // January 15, 2025
+                ];
+
+                let output =
+                    "<h3>Comparison: toISOString() vs Local Formatting</h3>";
+
+                testDates.forEach((date, index) => {
+                    // Old method (problematic)
+                    const oldMethod = date.toISOString().split("T")[0];
+
+                    // New method (fixed)
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, "0");
+                    const day = String(date.getDate()).padStart(2, "0");
+                    const newMethod = `${year}-${month}-${day}`;
+
+                    output += `
+                    <div style="margin: 10px 0; padding: 10px; border: 1px solid #ccc;">
+                        <strong>Test Date ${
+                            index + 1
+                        }:</strong> ${date.toString()}<br>
+                        <span style="color: red;">Old Method (toISOString):</span> ${oldMethod}<br>
+                        <span style="color: green;">New Method (Local):</span> ${newMethod}<br>
+                        <strong>Match:</strong> ${
+                            oldMethod === newMethod
+                                ? "✅ YES"
+                                : "❌ NO (Timezone Issue!)"
+                        }
+                    </div>
+                `;
+                });
+
+                results.innerHTML = output;
+            }
+
+            // Run test when page loads
+            document.addEventListener("DOMContentLoaded", testDateFormatting);
+        </script>
+    </body>
+</html>
